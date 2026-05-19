@@ -33,7 +33,7 @@ st.success(f"Base carregada com sucesso! {len(df)} pedidos encontrados")
 with st.sidebar:
     st.markdown("### 🚚 Filtros")
 
-    transportadoras = sorted(df["Transportadoras"].unique())
+    transportadoras = sorted(df["Transportadora"].unique())
     sel_transp = st.multiselect(
         "Transportadora",
         transportadoras, 
@@ -59,8 +59,33 @@ with st.sidebar:
     df_filtrado = df[
     df["Transportadora"].isin(sel_transp) &
     df["Status_Entrega"].isin(sel_status) &
-    (df["Data_Pedido"].dt.date >= data_ini) &
+    (df["Data_Pedido"].dt.date >= data_inicio) &
     (df["Data_Pedido"].dt.date <= data_fim)
 ]
 
 st.info(f"Exibindo {len(df_filtrado)} pedidos filtrados")
+
+
+# ----------------- Trabalhando os KPI's ---------------------------------
+
+st.markdown("---")
+k1,k2,k3,k4,k5 = st.columns(5)
+
+with k1:
+    st.metric("Total de pedidos", len(df_filtrado))
+
+with k2:
+    taxa = df_filtrado["Pedido_Atrasado"].mean()*100
+    st.metric("Taxa de Atraso", f"{taxa:.2f}%")
+
+with k3:
+    extraviado = df_filtrado[df_filtrado["Status_Entrega"] =="Extraviado"]["Valor_NF_BRL"].sum()
+    st.metric("Valor Extraviado", f"R$ {extraviado:,.0f}")
+
+with k4:
+    satisfacao = df_filtrado["Satisfacao_Cliente"].mean()
+    st.metric("Satisfação Média", f"{satisfacao:.2f} ⭐")
+
+with k5:
+    desvio = df_filtrado["Desvio_Dias"].mean()
+    st.metric("Desvio Médio", f"{desvio:+.1f} dias")

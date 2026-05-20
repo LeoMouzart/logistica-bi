@@ -578,3 +578,18 @@ with aba3:
         mime="text/csv",
         use_container_width=True
     )
+
+
+    st.markdown("---")
+
+st.markdown(
+    """
+    <div style='text-align: center; color: gray; font-size: 13px;'>
+        Desenvolvido por <strong>Leonardo Mouzart do nascimento</strong> · 
+        <a href='https://github.com/leomouzart' target='_blank'>GitHub</a> · 
+        <a href='https://www.linkedin.com/in/leonardo-mouzart-do-nascimento-a194ba174/' target='_blank'>LinkedIn</a> · 
+        📧 leonardomouzart@gmail.com
+    </div>
+    """,
+    unsafe_allow_html=True
+)

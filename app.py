@@ -5,9 +5,9 @@ import pandas as pd
 import plotly.express as px
 
 
-# =====================================================================
+
 # CONFIGURAÇÃO DA PÁGINA
-# =====================================================================
+
 
 st.set_page_config(
     page_title="BI Logístico",
@@ -16,17 +16,17 @@ st.set_page_config(
 )
 
 
-# =====================================================================
+
 # TÍTULO
-# =====================================================================
+
 
 st.title("🚚 BI Logístico — Painel Executivo")
 st.markdown("Análise de Operação Logística")
 
 
-# =====================================================================
+
 # IMPORTAÇÃO DOS DADOS
-# =====================================================================
+
 
 @st.cache_data
 def importacao_dados():
@@ -41,9 +41,9 @@ st.success(
 )
 
 
-# =====================================================================
+
 # SIDEBAR / FILTROS
-# =====================================================================
+
 
 with st.sidebar:
 
@@ -79,9 +79,9 @@ with st.sidebar:
     )
 
 
-# =====================================================================
+
 # FILTRO PRINCIPAL
-# =====================================================================
+
 
 df_filtrado = df[
     df["Transportadora"].isin(sel_transp)
@@ -96,9 +96,9 @@ df_filtrado = df[
 st.info(f"Exibindo {len(df_filtrado)} pedidos filtrados")
 
 
-# =====================================================================
+
 # KPIs
-# =====================================================================
+
 
 st.markdown("---")
 
@@ -154,9 +154,9 @@ with k5:
     )
 
 
-# =====================================================================
+
 # TRATAMENTO DOS DADOS
-# =====================================================================
+
 
 # ---------------- MENSAL ----------------
 
@@ -225,9 +225,9 @@ correlacao["Taxa_Atraso"] = (
 ).round(1)
 
 
-# =====================================================================
+
 # INSIGHTS
-# =====================================================================
+
 
 melhor = correlacao.sort_values(
     ["Taxa_Atraso", "Satisfacao"],
@@ -240,9 +240,9 @@ pior = correlacao.sort_values(
 ).iloc[0]
 
 
-# =====================================================================
+
 # TEMA ESCURO PADRONIZADO
-# =====================================================================
+
 
 COR_FUNDO = "#0E1117"
 COR_CARD = "#161B22"
@@ -251,13 +251,13 @@ COR_GRID = "rgba(255,255,255,0.08)"
 COR_PRIMARIA = "#4F8BF9"
 
 
-# =====================================================================
-# CRIAÇÃO DOS GRÁFICOS
-# =====================================================================
 
-# =====================================================================
+# CRIAÇÃO DOS GRÁFICOS
+
+
+
 # GRÁFICO MENSAL
-# =====================================================================
+
 
 fig_mensal = px.bar(
     mensal,
@@ -294,9 +294,9 @@ fig_mensal.update_xaxes(
 )
 
 
-# =====================================================================
+
 # GRÁFICO TRANSPORTADORAS
-# =====================================================================
+
 
 fig_transp = px.bar(
     transp.sort_values("Pedidos", ascending=False),
@@ -333,9 +333,9 @@ fig_transp.update_xaxes(
 )
 
 
-# =====================================================================
+
 # GRÁFICO STATUS
-# =====================================================================
+
 
 fig_status = px.pie(
     status,
@@ -364,9 +364,9 @@ fig_status.update_traces(
 )
 
 
-# =====================================================================
+
 # GRÁFICO FINANCEIRO
-# =====================================================================
+
 
 fig_financeiro = px.line(
     financeiro,
@@ -405,9 +405,9 @@ fig_financeiro.update_xaxes(
 )
 
 
-# =====================================================================
+
 # GRÁFICO CORRELAÇÃO
-# =====================================================================
+
 
 fig_correlacao = px.scatter(
     correlacao,
@@ -452,9 +452,9 @@ fig_correlacao.update_xaxes(
 )
 
 
-# =====================================================================
+
 # GRID / LAYOUT
-# =====================================================================
+
 
 # ---------------- LINHA 1 ----------------
 
@@ -462,56 +462,59 @@ st.markdown("---")
 
 st.subheader("📅 Evolução Mensal de Pedidos")
 
-st.plotly_chart(
-    fig_mensal,
-    use_container_width=True,
-    key="grafico_mensal"
-)
+aba1, aba2, aba3 = st.tabs([
+    "📊 Visão Geral",
+    "🚚 Transportadoras",
+    "📋 Dados"
+])
 
 
-# ---------------- LINHA 2 ----------------
 
-col1, col2 = st.columns(2)
+# ABA 1 — VISÃO GERAL
 
-with col1:
 
-    st.subheader("🚚 Performance Transportadoras")
+with aba1:
 
+    st.subheader("📅 Evolução Mensal de Pedidos")
     st.plotly_chart(
-        fig_transp,
+        fig_mensal,
         use_container_width=True,
-        key="grafico_transportadora"
+        key="grafico_mensal"
     )
-
-with col2:
-
-    st.subheader("📦 Status das Entregas")
-
-    st.plotly_chart(
-        fig_status,
-        use_container_width=True,
-        key="grafico_status"
-    )
-
-
-# ---------------- LINHA 3 ----------------
-
-col3, col4 = st.columns(2)
-
-with col3:
 
     st.subheader("💰 Evolução Financeira")
-
     st.plotly_chart(
         fig_financeiro,
         use_container_width=True,
         key="grafico_financeiro"
     )
 
-with col4:
+
+
+# ABA 2 — TRANSPORTADORAS
+
+
+with aba2:
+
+    col1, col2 = st.columns(2)
+
+    with col1:
+        st.subheader("🚚 Performance Transportadoras")
+        st.plotly_chart(
+            fig_transp,
+            use_container_width=True,
+            key="grafico_transportadora"
+        )
+
+    with col2:
+        st.subheader("📦 Status das Entregas")
+        st.plotly_chart(
+            fig_status,
+            use_container_width=True,
+            key="grafico_status"
+        )
 
     st.subheader("📈 Satisfação x Atraso")
-
     st.plotly_chart(
         fig_correlacao,
         use_container_width=True,
@@ -519,74 +522,59 @@ with col4:
     )
 
 
-# =====================================================================
-# INSIGHTS
-# =====================================================================
 
-st.markdown("---")
+# ABA 3 — DADOS
 
-st.subheader("🧠 Insights Operacionais")
 
-c1, c2 = st.columns(2)
+with aba3:
 
-with c1:
+    st.subheader("🧠 Insights Operacionais")
 
-    st.success(
-        f"""
-        Melhor performance operacional
+    c1, c2 = st.columns(2)
 
-        🚚 {melhor['Transportadora']}
+    with c1:
+        st.success(
+            f"""
+            Melhor performance operacional
 
-        • Taxa de atraso: {melhor['Taxa_Atraso']}%
-        • Satisfação: {melhor['Satisfacao']:.2f} ⭐
-        """
+            🚚 {melhor['Transportadora']}
+
+            • Taxa de atraso: {melhor['Taxa_Atraso']}%
+            • Satisfação: {melhor['Satisfacao']:.2f} ⭐
+            """
+        )
+
+    with c2:
+        st.error(
+            f"""
+            Pior performance operacional
+
+            🚚 {pior['Transportadora']}
+
+            • Taxa de atraso: {pior['Taxa_Atraso']}%
+            • Satisfação: {pior['Satisfacao']:.2f} ⭐
+            """
+        )
+
+    st.markdown("---")
+    st.subheader("📋 Dados Detalhados")
+    st.dataframe(
+        df_filtrado,
+        use_container_width=True,
+        height=400
     )
 
-with c2:
+    st.markdown("---")
+    st.subheader("📤 Exportação")
 
-    st.error(
-        f"""
-        Pior performance operacional
+    csv = df_filtrado.to_csv(
+        index=False
+    ).encode("utf-8")
 
-        🚚 {pior['Transportadora']}
-
-        • Taxa de atraso: {pior['Taxa_Atraso']}%
-        • Satisfação: {pior['Satisfacao']:.2f} ⭐
-        """
+    st.download_button(
+        label="📥 Exportar Dados CSV",
+        data=csv,
+        file_name="dados_filtrados.csv",
+        mime="text/csv",
+        use_container_width=True
     )
-
-
-# =====================================================================
-# TABELA
-# =====================================================================
-
-st.markdown("---")
-
-st.subheader("📋 Dados Detalhados")
-
-st.dataframe(
-    df_filtrado,
-    use_container_width=True,
-    height=400
-)
-
-
-# =====================================================================
-# EXPORTAÇÃO
-# =====================================================================
-
-st.markdown("---")
-
-st.subheader("📤 Exportação")
-
-csv = df_filtrado.to_csv(
-    index=False
-).encode("utf-8")
-
-st.download_button(
-    label="📥 Exportar Dados CSV",
-    data=csv,
-    file_name="dados_filtrados.csv",
-    mime="text/csv",
-    use_container_width=True
-)

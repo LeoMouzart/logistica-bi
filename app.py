@@ -585,7 +585,7 @@ with aba3:
 st.markdown(
     """
     <div style='text-align: center; color: gray; font-size: 13px;'>
-        Desenvolvido por <strong>Leonardo Mouzart do nascimento</strong> · 
+        Desenvolvido por <strong>Leonardo Mouzart do Nascimento</strong> · 
         <a href='https://github.com/leomouzart' target='_blank'>GitHub</a> · 
         <a href='https://www.linkedin.com/in/leonardo-mouzart-do-nascimento-a194ba174/' target='_blank'>LinkedIn</a> · 
         📧 leonardomouzart@gmail.com
